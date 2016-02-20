@@ -5,6 +5,7 @@
   /*<td><a href="https://www.google.com/maps/search/<?= $row["location"]["coordinates"][1] ?>,<?= $row["location"]["coordinates"][0] ?>"><?= $row["address"] ?></a></td>
   */
   //https://data.sfgov.org/resource/tkzw-k3nq.json
+  //$response == NULL
   $view_uid = "tkzw-k3nq";
   $root_url = "data.sfgov.org";
   $app_token = "swtYmOjaeAOAuQ0UXBuOkQtWb";
@@ -14,13 +15,19 @@
   $longitude = array_get("longitude", $_POST);
   $range = array_get("range", $_POST);
 
-  if($latitude != NULL && $longitude != NULL && $range != NULL) {
-    // Create a new unauthenticated client
-    $socrata = new Socrata($root_url, $app_token);
+  $postBack = $_SERVER['REQUEST_METHOD'] == 'POST';
 
-    $params = array("\$where" => "within_circle(location, $latitude, $longitude, $range)");
+  if ($postBack)
+  {
 
-    $response = $socrata->get($view_uid, $params);
+    if($latitude != NULL && $longitude != NULL && $range != NULL) {
+      // Create a new unauthenticated client
+      $socrata = new Socrata($root_url, $app_token);
+
+      $params = array("\$where" => "within_circle(location, $latitude, $longitude, $range)");
+      $response = $socrata->get($view_uid, $params);
+    }
+
   }
 ?>
 <html>
@@ -32,7 +39,7 @@
 
     <p>If you get no results, its likely because there are no trees at that location. Try another lat/long.</p>
 
-    <?php if($response == NULL) { ?>
+    <?php if(!$postBack) { ?>
       <form action="index.php" method="POST">
         <label for="latitude">Latitude</label>
         <input type="text" name="latitude" size="10" value="37.790842"/><br/>
