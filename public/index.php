@@ -6,6 +6,7 @@
   */
   //https://data.sfgov.org/resource/tkzw-k3nq.json
   //$response == NULL
+  //https://data.sfgov.org/resource/tkzw-k3nq.json
   $view_uid = "tkzw-k3nq";
   $root_url = "data.sfgov.org";
   $app_token = "swtYmOjaeAOAuQ0UXBuOkQtWb";
@@ -24,7 +25,7 @@
       // Create a new unauthenticated client
       $socrata = new Socrata($root_url, $app_token);
 
-      $params = array("\$where" => "within_circle(location, $latitude, $longitude, $range)");
+      $params = ""; //array("\$where" => "within_circle(location, $latitude, $longitude, $range)");
       $response = $socrata->get($view_uid, $params);
     }
 
@@ -64,8 +65,8 @@
         <?# Print rows ?>
         <?php foreach($response as $row) { ?>
           <tr>
-            <td><?= $row["qSpecies"] ?></td>
-            <td><a href="https://www.google.com/maps/search/<?= $row["Latitude"] ?>,<?= $row["Longitude"] ?>"><?= $row["qAddress"] ?></a></td>
+            <td><?= $row["qspecies"] ?></td>
+            <td><a href="https://www.google.com/maps/search/<?= $row["latitude"] ?>,<?= $row["longitude"] ?>"><?= $row["qaddress"] ?></a></td>
           </tr>
         <?php } ?>
       </table>
